@@ -1,0 +1,14 @@
+# Mac OS
+.DS_Store
+
+# for c++
+*.o
+
+# executables
+*.out
+
+# images
+*.ppm
+
+# log
+log

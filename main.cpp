@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "float.h"
+#include <cfloat>
 #include "timer.h"
 #include "camera.h"
 #include "hitable_list.h"
@@ -20,7 +20,7 @@ void PPMHeader(ofstream &ofs, int x, int y) {
 
 vec3 color(const ray& r, hitable_list& world, int depth) {
     hit_record rec;
-    if(world.hit(r, 0.001, MAXFLOAT, rec)) {
+    if(world.hit(r, 0.001, FLT_MAX, rec)) {
         ray scattered;
         vec3 attenuation;
         if(depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
@@ -66,7 +66,7 @@ void draw(ofstream& ofs, bool show_time = true) {
     // basic config
     int PIX_WIDTH = 2880;
     int PIX_HEIGHT = 1800;
-    int ANTIALIAS_N = 4;
+    int ANTIALIAS_N = 100;
 
     PPMHeader(ofs, PIX_WIDTH, PIX_HEIGHT);
 

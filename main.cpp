@@ -72,9 +72,9 @@ void draw(ofstream& ofs, bool show_time = true) {
     timer draw_timer;
     draw_timer.begin();
     // basic config
-    int PIX_WIDTH = 288;
-    int PIX_HEIGHT = 180;
-    int ANTIALIAS_N = 10;
+    int PIX_WIDTH = 2880;
+    int PIX_HEIGHT = 1800;
+    int ANTIALIAS_N = 100;
 
     PPMHeader(ofs, PIX_WIDTH, PIX_HEIGHT);
 
@@ -106,7 +106,7 @@ void draw(ofstream& ofs, bool show_time = true) {
                 float u = float(j + drand48()) / float(PIX_WIDTH); // u, v in [0, 1] from lower_left_corner
                 float v = float(i + drand48()) / float(PIX_HEIGHT);
                 ray r = cam.get_ray(u, v);
-                col += color(r, balls, 0); // balls / world : list vs bvh
+                col += color(r, world, 0); // balls vs world : list vs bvh
             }
             col /= ANTIALIAS_N;
             col = sqrt(col); // vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2])); // gamma correction

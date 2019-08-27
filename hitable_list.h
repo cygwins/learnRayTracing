@@ -1,12 +1,14 @@
 #ifndef HITABLE_LIST_H_
 #define HITABLE_LIST_H_
 #include <vector>
+#include <algorithm>
 #include "hitable.h"
 using std::vector;
 using std::cerr;
 using std::cout;
 using std::endl;
 using std::to_string;
+using std::sort;
 
 class hitable_list : public hitable {
 public:

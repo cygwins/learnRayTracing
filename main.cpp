@@ -70,8 +70,8 @@ void draw(ofstream& ofs, bool show_time = true) {
     timer draw_timer;
     draw_timer.begin();
     // basic config
-    int PIX_WIDTH = 288;
-    int PIX_HEIGHT = 180;
+    int PIX_WIDTH = 2880;
+    int PIX_HEIGHT = 1800;
     int ANTIALIAS_N = 100;
 
     PPMHeader(ofs, PIX_WIDTH, PIX_HEIGHT);

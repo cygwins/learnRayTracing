@@ -5,7 +5,6 @@
 #include "timer.h"
 #include "camera.h"
 #include "hitable_list.h"
-#include "material.h"
 #include "sphere.h"
 using std::cout;
 using std::endl;
@@ -13,8 +12,6 @@ using std::flush;
 using std::ifstream;
 using std::ofstream;
 using std::string;
-
-int id = 0;
 
 void PPMHeader(ofstream &ofs, int x, int y) {
     ofs << "P3" << endl << x << " " << y << endl << 255 << endl;
@@ -44,11 +41,12 @@ vec3 color(const ray& r, hitable_list *list, int depth) {
 }
 
 hitable_list* myballs() {
+    bvh_node::HID = 0;
     hitable_list *balls = new hitable_list;
-    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(vec3(0.5, 0.5, 0.5)), ++id ));
-    balls->add(new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5), ++id ));
-    balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1)), ++id ));
-    balls->add(new sphere( vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0), ++id ));
+    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(vec3(0.5, 0.5, 0.5)) ));
+    balls->add(new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5) ));
+    balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1)) ));
+    balls->add(new sphere( vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0) ));
     for (int a = -11; a < 11; ++a) { for (int b = -11; b < 11; ++b) {
         float mat = drand48();
         float radius = 0.2 + 0.05*drand48();
@@ -57,11 +55,11 @@ hitable_list* myballs() {
             continue;
         }
         if(mat < 0.6) { // diffuse
-            balls->add(new moving_sphere(center, center + vec3(0,0.5*drand48(),0), 0, 1, radius, new lambertian(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48())), ++id ));
+            balls->add(new moving_sphere(center, center + vec3(0,0.5*drand48(),0), 0, 1, radius, new lambertian(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48())) ));
         } else if(mat < 0.85) { // metal
-            balls->add(new sphere(center, radius, new metal(vec3(0.6+0.4*drand48(), 0.6+0.4*drand48(), 0.6+0.4*drand48()), 0.4*drand48()), ++id ));
+            balls->add(new sphere(center, radius, new metal(vec3(0.6+0.4*drand48(), 0.6+0.4*drand48(), 0.6+0.4*drand48()), 0.4*drand48()) ));
         } else { // glass
-            balls->add(new sphere(center, radius, new dielectric(1.5), ++id ));
+            balls->add(new sphere(center, radius, new dielectric(1.5) ));
         }
     }}
     cout << "Random scene generated. Total small ball number: " << balls->list.size() << endl;
@@ -72,8 +70,8 @@ void draw(ofstream& ofs, bool show_time = true) {
     timer draw_timer;
     draw_timer.begin();
     // basic config
-    int PIX_WIDTH = 2880;
-    int PIX_HEIGHT = 1800;
+    int PIX_WIDTH = 288;
+    int PIX_HEIGHT = 180;
     int ANTIALIAS_N = 100;
 
     PPMHeader(ofs, PIX_WIDTH, PIX_HEIGHT);
@@ -81,7 +79,6 @@ void draw(ofstream& ofs, bool show_time = true) {
     float width_height_ratio = float(PIX_WIDTH) / float(PIX_HEIGHT);
 
     // set up stage
-
     hitable_list *world = new hitable_list;
 
     hitable_list *balls = myballs();

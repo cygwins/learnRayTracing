@@ -6,6 +6,7 @@ using std::vector;
 using std::cerr;
 using std::cout;
 using std::endl;
+using std::to_string;
 
 class hitable_list : public hitable {
 public:
@@ -53,7 +54,7 @@ bool hitable_list::bounding_box(float t0, float t1, aabb& box) const {
 }
 
 void hitable_list::print() const {
-    cout << "hitable_list of size " << list.size() << endl;
+    cout << "hitable_list " << to_string(hid) << " of size " << list.size() << endl;
 }
 
 class bvh_node : public hitable { // bvh = bounding volumn hierarchy
@@ -123,7 +124,7 @@ bool bvh_node::hit(const ray& r, float t_min, float t_max, hit_record& rec) cons
 }
 
 void bvh_node::print() const {
-    cout << "bvh_node";
+    cout << "bvh_node " << to_string(hid);
     cout << "box: <" << box.min_corner << ", " << box.max_corner << ">" << endl;
     if(left) {
         cout << endl << "left:" << endl;

@@ -44,6 +44,12 @@ public:
 
     inline float length_sqaure() const { return e[0]*e[0] + e[1]*e[1] + e[2]*e[2]; }
     inline float length() const { return sqrt(length_sqaure()); }
+
+    friend istream& operator>>(istream& is, vec3& v);
+    friend ostream& operator<<(ostream& os, const vec3& v);
+    friend vec3 max(const vec3& v1, const vec3& v2);
+    friend vec3 min(const vec3& v1, const vec3& v2);
+    friend vec3 sqrt(const vec3& v);
     
     inline void normalize();
     float e[3];
@@ -187,14 +193,17 @@ inline vec3 normalized(const vec3 v) {
     return v / v.length();
 }
 
+inline
 vec3 max(const vec3& v1, const vec3& v2) {
     return vec3(fmax(v1.e[0], v2.e[0]), fmax(v1.e[1], v2.e[1]), fmax(v1.e[2], v2.e[2]));
 }
 
+inline
 vec3 min(const vec3& v1, const vec3& v2) {
     return vec3(fmin(v1.e[0], v2.e[0]), fmin(v1.e[1], v2.e[1]), fmin(v1.e[2], v2.e[2]));
 }
 
+inline
 vec3 sqrt(const vec3& v) {
     return vec3(sqrt(v.e[0]), sqrt(v.e[1]), sqrt(v.e[2]));
 }
@@ -205,6 +214,10 @@ public:
     vec3i();
     vec3i(int e0, int e1, int e2) { e[0] = e0; e[1] = e1; e[2] = e2; }
     vec3i(const vec3& v) { e[0] = int(v.e[0]); e[1] = int(v.e[1]); e[2] = int(v.e[2]); }
+
+    friend istream& operator>>(istream& is, vec3i& v);
+    friend ostream& operator<<(ostream& os, const vec3i& v);
+    
     int e[3];
 };
 

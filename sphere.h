@@ -1,19 +1,21 @@
 #ifndef SPHERE_H_
 #define SPHERE_H_
 #include "hitable.h"
+#include "material.h"
 using std::to_string;
+using std::cout;
+using std::endl;
 
 class sphere : public hitable {
 public:
     sphere() {}
-    sphere(vec3 cen, float r, material *mat, int id) : center(cen), radius(r), mat_ptr(mat), uid(id) {}
+    sphere(vec3 cen, float r, material *mat) : center(cen), radius(r), mat_ptr(mat) {}
     virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
     virtual bool bounding_box(float t0, float t1, aabb& box) const;
     virtual void print() const;
     vec3 center;
     float radius;
     material *mat_ptr;
-    int uid;
 };
 
 bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
@@ -35,7 +37,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             // where normalized(rec.p - center) is always outward. (same with the other point)
             rec.normal = (rec.p - center) / radius;
             rec.mat_ptr = mat_ptr;
-            rec.whom = "shpere " + to_string(uid) + " at " + to_string(center.x) + ","
+            rec.whom = "shpere " + to_string(hid) + " at " + to_string(center.x) + ","
                                  + to_string(center.y) + "," + to_string(center.z);
             return true;
         }
@@ -45,7 +47,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.p = r.at(t);
             rec.normal = (rec.p - center) / radius;
             rec.mat_ptr = mat_ptr;
-            rec.whom = "shpere " + to_string(uid) + " at " + to_string(center.x) + ","
+            rec.whom = "shpere " + to_string(hid) + " at " + to_string(center.x) + ","
                                  + to_string(center.y) + "," + to_string(center.z);
             return true;
         }
@@ -60,14 +62,14 @@ bool sphere::bounding_box(float t0, float t1, aabb& box) const {
 }
 
 void sphere::print() const {
-    cout << "Sphere " << to_string(uid) << " at " << center << ", radius " << radius << endl;
+    cout << "Sphere " << to_string(hid) << " at " << center << ", radius " << radius << endl;
 }
 
 class moving_sphere : public hitable {
 public:
     moving_sphere() {}
-    moving_sphere(vec3 cen0, vec3 cen1, float t0, float t1, float r, material *mat, int id) :
-        center0(cen0), center1(cen1), time0(t0), time1(t1), radius(r), mat_ptr(mat), uid(id) {}
+    moving_sphere(vec3 cen0, vec3 cen1, float t0, float t1, float r, material *mat) :
+        center0(cen0), center1(cen1), time0(t0), time1(t1), radius(r), mat_ptr(mat) {}
     virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
     virtual bool bounding_box(float t0, float t1, aabb& box) const;
     virtual void print() const;
@@ -78,7 +80,6 @@ public:
     float time0, time1;
     float radius;
     material *mat_ptr;
-    int uid;
 };
 
 vec3 moving_sphere::center(float time) const {
@@ -98,7 +99,7 @@ bool moving_sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec)
             rec.p = r.at(t);
             rec.normal = (rec.p - center(r.time())) / radius;
             rec.mat_ptr = mat_ptr;
-            rec.whom = "moving shpere " + to_string(uid);
+            rec.whom = "moving shpere " + to_string(hid);
             return true;
         }
         t = (-b + sqrt(discriminant)) / a; // two possible solution
@@ -107,7 +108,7 @@ bool moving_sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec)
             rec.p = r.at(t);
             rec.normal = (rec.p - center(r.time())) / radius;
             rec.mat_ptr = mat_ptr;
-            rec.whom = "moving shpere " + to_string(uid);
+            rec.whom = "moving shpere " + to_string(hid);
             return true;
         }
     }
@@ -123,7 +124,7 @@ bool moving_sphere::bounding_box(float t0, float t1, aabb& box) const {
 }
 
 void moving_sphere::print() const {
-    cout << "Moving sphere " << to_string(uid) << ", " << center(time0) << " at " << time0 << ", "
+    cout << "Moving sphere " << to_string(hid) << ", " << center(time0) << " at " << time0 << ", "
          << center(time1) << " at " << time1 << ", radius " << radius << endl;
 }
 

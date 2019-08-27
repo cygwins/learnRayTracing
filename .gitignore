@@ -12,6 +12,7 @@
 
 # log
 log
+*.log
 
 # local scratch paper
 test.cpp

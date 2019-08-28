@@ -4,8 +4,9 @@
 #include <cfloat>
 #include "timer.h"
 #include "camera.h"
-#include "hitable_list.h"
+#include "bvh.h"
 #include "sphere.h"
+#include "moving_sphere.h"
 using std::cout;
 using std::endl;
 using std::flush;
@@ -67,7 +68,7 @@ hitable_list* myballs() {
             balls->add(new sphere(center, radius, new dielectric(1.5) ));
         }
     }}
-    cout << "Random scene generated. Total small ball number: " << balls->list.size() << endl;
+    cout << "Random scene generated. Total ball number: " << balls->list.size() << endl;
     return balls;
 }
 

@@ -43,7 +43,12 @@ vec3 color(const ray& r, hitable_list *list, int depth) {
 hitable_list* myballs() {
     bvh_node::HID = 0;
     hitable_list *balls = new hitable_list;
-    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(new constant_texture(vec3(0.5, 0.5, 0.5))) ));
+    // the ground is a giant ball (earth?)
+    texture *checker = new checker_texture( new constant_texture(vec3(0.2, 0.3, 0.1)),
+                                            new constant_texture(vec3(0.9, 0.9, 0.9)));
+    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(checker) ));
+    
+    // three big ball of each material
     balls->add(new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5) ));
     balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(new constant_texture(vec3(0.4, 0.2, 0.1))) ));
     balls->add(new sphere( vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0) ));
@@ -70,9 +75,9 @@ void draw(ofstream& ofs, bool show_time = true) {
     timer draw_timer;
     draw_timer.begin();
     // basic config
-    int PIX_WIDTH = 2880;
-    int PIX_HEIGHT = 1800;
-    int ANTIALIAS_N = 100;
+    int PIX_WIDTH = 288;
+    int PIX_HEIGHT = 180;
+    int ANTIALIAS_N = 10;
 
     PPMHeader(ofs, PIX_WIDTH, PIX_HEIGHT);
 

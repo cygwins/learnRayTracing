@@ -52,8 +52,8 @@ bool aabb::hit(const ray& r, float tmin, float tmax) const {
         float t0 = (min_corner[i] - r.origin()[i]) * invB;
         float t1 = (max_corner[i] - r.origin()[i]) * invB;
         if(invB < 0) { std::swap(t0, t1); }
-        tmin = t0 > tmin ? t0 : tmin; // fmax(tmin, t0);
-        tmax = t1 < tmax ? t1 : tmax; // fmin(tmax, t1);
+        tmin = fmax(tmin, t0); // t0 > tmin ? t0 : tmin;
+        tmax = fmin(tmax, t1); // t1 < tmax ? t1 : tmax;
         if(tmin >= tmax) {
             // cout << " no." << endl;
             return false;

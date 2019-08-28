@@ -85,9 +85,9 @@ bool box_compare_i(int axis, const aabb &a, const aabb &b) {
     return a.min_corner[axis] < b.min_corner[axis];
 }
 
-bool hitable_compare_i(int axis, const hitable *a, const hitable *b) {
+bool hitable_compare_i(int axis, const hitable *a, const hitable *b, float t0, float t1) {
     aabb aa, bb;
-    if(!a->bounding_box(0,0,aa) || !b->bounding_box(0,0,bb)) {
+    if(!a->bounding_box(t0,t1,aa) || !b->bounding_box(t0,t1,bb)) {
         cerr << "no bounding_box comparing hitable" << endl;
     }
     return box_compare_i(axis, aa, bb);

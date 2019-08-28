@@ -43,9 +43,9 @@ vec3 color(const ray& r, hitable_list *list, int depth) {
 hitable_list* myballs() {
     bvh_node::HID = 0;
     hitable_list *balls = new hitable_list;
-    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(vec3(0.5, 0.5, 0.5)) ));
+    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(new constant_texture(vec3(0.5, 0.5, 0.5))) ));
     balls->add(new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5) ));
-    balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1)) ));
+    balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(new constant_texture(vec3(0.4, 0.2, 0.1))) ));
     balls->add(new sphere( vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0) ));
     for (int a = -11; a < 11; ++a) { for (int b = -11; b < 11; ++b) {
         float mat = drand48();
@@ -55,7 +55,7 @@ hitable_list* myballs() {
             continue;
         }
         if(mat < 0.6) { // diffuse
-            balls->add(new moving_sphere(center, center + vec3(0,0.5*drand48(),0), 0, 1, radius, new lambertian(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48())) ));
+            balls->add(new moving_sphere(center, center + vec3(0,0.5*drand48(),0), 0, 1, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
         } else if(mat < 0.85) { // metal
             balls->add(new sphere(center, radius, new metal(vec3(0.6+0.4*drand48(), 0.6+0.4*drand48(), 0.6+0.4*drand48()), 0.4*drand48()) ));
         } else { // glass

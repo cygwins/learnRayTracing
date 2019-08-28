@@ -75,8 +75,8 @@ public:
 
 bvh_node::bvh_node(vector<hitable*> list, float t0, float t1) {
     int axis = int(3*drand48());
-    sort(list.begin(), list.end(), [axis](hitable *a, hitable *b){
-        return hitable_compare_i(axis, a, b);});
+    sort(list.begin(), list.end(), [axis, t0, t1](hitable *a, hitable *b){
+        return hitable_compare_i(axis, a, b, t0, t1);});
     if(list.size() <= 2) {
         left = list.size() > 0 ? list[0] : nullptr;
         right = list.size() > 1 ? list[1] : nullptr;

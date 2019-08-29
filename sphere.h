@@ -56,7 +56,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
 }
 
 bool sphere::bounding_box(float t0, float t1, aabb& box) const {
-    float r = abs(radius);
+    float r = fabs(radius);
     box = aabb(center - r, center + r);
     return true;
 }

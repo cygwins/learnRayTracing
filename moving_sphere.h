@@ -59,7 +59,7 @@ bool moving_sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec)
 bool moving_sphere::bounding_box(float t0, float t1, aabb& box) const {
     vec3 min_center = min(center(t0), center(t1));
     vec3 max_center = max(center(t0), center(t1));
-    float r = abs(radius);
+    float r = fabs(radius);
     box = aabb(min_center - r, max_center + r);
     return true;
 }

@@ -7,6 +7,7 @@
 class material {
 public:
     virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const = 0;
+    virtual vec3 emitted(float u, float v, vec3 &p) const { return vec3(0,0,0); }
 };
 
 vec3 reflect(const vec3& v, const vec3& n) {
@@ -38,7 +39,7 @@ public:
     virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
         vec3 target = rec.p + rec.normal + random_in_sphere();
         scattered = ray(rec.p, target - rec.p, r_in.time());
-        attenuation = albedo->value(0, 0, rec.p);
+        attenuation = albedo->value(rec.u, rec.v, rec.p);
         return true;
     }
 
@@ -102,6 +103,16 @@ public:
     }
 
     float refract_idx;
+};
+
+class diffuse_light : public material {
+public:
+    diffuse_light(texture *a) : emit(a) { }
+    
+    virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const { return false; }
+    virtual vec3 emitted(float u, float v, vec3 &p) const { return emit->value(u, v, p); }
+
+    texture *emit;
 };
 
 #endif

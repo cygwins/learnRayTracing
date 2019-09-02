@@ -18,6 +18,13 @@ public:
     material *mat_ptr;
 };
 
+void get_sphere_uv(const vec3 &p, float &u, float &v) {
+    float phi = atan2(p.z, p.x);
+    float theta = asin(p.y);
+    u = 1 - (phi + M_PI) / (2*M_PI); // cross(x, z) = -y, need to flip
+    v = (theta + M_PI/2) / M_PI;
+}
+
 bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     // point P is on sphere(C, R) <==>
     // dot((P-C),(P-C)) == R*R <==>
@@ -36,6 +43,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             // Note: negative radius leads to inward normal,
             // where normalized(rec.p - center) is always outward. (same with the other point)
             rec.normal = (rec.p - center) / radius;
+            get_sphere_uv(rec.normal, rec.u, rec.v);
             rec.mat_ptr = mat_ptr;
             rec.whom = "shpere " + to_string(hid) + " at " + to_string(center.x) + ","
                                  + to_string(center.y) + "," + to_string(center.z);
@@ -46,6 +54,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.t = t;
             rec.p = r.at(t);
             rec.normal = (rec.p - center) / radius;
+            get_sphere_uv(rec.normal, rec.u, rec.v);
             rec.mat_ptr = mat_ptr;
             rec.whom = "shpere " + to_string(hid) + " at " + to_string(center.x) + ","
                                  + to_string(center.y) + "," + to_string(center.z);

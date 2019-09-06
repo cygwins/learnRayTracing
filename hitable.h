@@ -54,4 +54,33 @@ public:
     hitable *ptr;
 };
 
+class translate : public hitable {
+public:
+    translate(hitable *p, const vec3 &displacement) : ptr(p), offset(displacement) { }
+    virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
+        ray moved_r(r.origin() - offset, r.direction(), r.time());
+        if(ptr->hit(moved_r, t_min, t_max, rec)) {
+            rec.p += offset;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    virtual bool bounding_box(float t0, float t1, aabb& box) const {
+        if(ptr->bounding_box(t0, t1, box)) {
+            box = aabb(box.min_corner + offset, box.max_corner + offset);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    virtual void print() const {
+        ptr->print();
+        cout << "with offset " << offset << endl;
+    }
+    
+    vec3 offset;
+    hitable *ptr;
+};
+
 #endif

@@ -15,9 +15,16 @@ public:
     vec3(const vec3& v) : // Copy constructor is needed because there is a custom copy-assignment operator
         x(e[0]), y(e[1]), z(e[2]), r(e[0]), g(e[1]), b(e[2])
         { e[0] = v.e[0]; e[1] = v.e[1]; e[2] = v.e[2]; }
+    vec3(float f) : // Copy constructor is needed because there is a custom copy-assignment operator
+        x(e[0]), y(e[1]), z(e[2]), r(e[0]), g(e[1]), b(e[2])
+        { e[0] = f; e[1] = f; e[2] = f; }
 
     vec3& operator=(const vec3 &v) { // Default copy assignment is deleted due to reference type member
         e[0] = v.e[0]; e[1] = v.e[1]; e[2] = v.e[2]; return *this;
+    }
+
+    vec3& operator=(float f) { // Default copy assignment is deleted due to reference type member
+        e[0] = f; e[1] = f; e[2] = f; return *this;
     }
     ////////////////////////////////////////////
     // Obsolete: change function to reference //

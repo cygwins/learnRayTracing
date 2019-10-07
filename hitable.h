@@ -28,6 +28,7 @@ public:
     hitable(const hitable &h) : hid(++HID) {}
     hitable &operator=(const hitable &h) { hid = ++HID; return *this; }
     unsigned int hid;
+    int depth = 0; // for bvh, generic objects have depth 0, bvh_nodes can have more depth
 };
 
 unsigned int hitable::HID = 0;

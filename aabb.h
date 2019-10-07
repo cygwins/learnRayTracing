@@ -10,13 +10,13 @@ inline float ffmax(float a, float b) { return a > b ? a : b; }
 class aabb {
 public:
     aabb() {}
-    aabb(const vec3 &a, const vec3 &b) : min_corner(a), max_corner(b) {}
+    aabb(const vec3 &a, const vec3 &b) : min_corner(a), max_corner(b), center((b-a) / 2.0) {}
 
     bool hit(const ray& r, float tmin, float tmax) const;
 
     friend aabb surrounding_box(aabb box0, aabb box1);
 
-    vec3 min_corner, max_corner;
+    vec3 min_corner, max_corner, center;
 };
 
 bool aabb::hit(const ray& r, float tmin, float tmax) const {

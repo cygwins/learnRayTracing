@@ -72,12 +72,12 @@ hitable_list* myballs() {
     // the ground is a giant ball (earth?)
     texture *checker = new checker_texture( new constant_texture(vec3(0.2, 0.3, 0.1)),
                                             new constant_texture(vec3(0.9, 0.9, 0.9)));
-    balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(checker) ));
+    // balls->add(new sphere( vec3(0, -1000, 0), 1000, new lambertian(checker) ));
     
     // three big ball of each material
-    balls->add(new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5) ));
-    balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(new constant_texture(vec3(0.4, 0.2, 0.1))) ));
-    balls->add(new sphere( vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0) ));
+    // balls->add(new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5) ));
+    // balls->add(new sphere( vec3(-4, 1, 0), 1.0, new lambertian(new constant_texture(vec3(0.4, 0.2, 0.1))) ));
+    // balls->add(new sphere( vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0) ));
     for (int a = -11; a < 11; ++a) { for (int b = -11; b < 11; ++b) {
         float mat = drand48();
         float radius = 0.2 + 0.05*drand48();
@@ -86,7 +86,8 @@ hitable_list* myballs() {
             continue;
         }
         if(mat < 0.6) { // diffuse
-            balls->add(new moving_sphere(center, center + vec3(0,0.05*drand48(),0), 0, 1, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
+            // balls->add(new moving_sphere(center, center + vec3(0,0.05*drand48(),0), 0, 1, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
+            balls->add(new sphere(center, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
         } else if(mat < 0.85) { // metal
             balls->add(new sphere(center, radius, new metal(vec3(0.6+0.4*drand48(), 0.6+0.4*drand48(), 0.6+0.4*drand48()), 0.4*drand48()) ));
         } else { // glass
@@ -125,6 +126,39 @@ hitable_list* vballs() {
         }
     }}
     cout << "Random scene generated. Total ball number: " << balls->list.size() << endl;
+    return balls;
+}
+
+hitable_list* uniform_balls() {
+    hitable_list *balls = new hitable_list;
+    for (int a = -5; a < 5; ++a) { for (int b = -5; b < 5; ++b) { for (int c = -5; c < 5; ++c) {
+        float radius = 0.2 + 0.05*drand48();
+        vec3 center(a + 0.5*drand48(), b + 0.5*drand48(), c + 0.5*drand48());
+        balls->add(new sphere(center, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
+    }}}
+    cout << "Uniform scene generated. Total ball number: " << balls->list.size() << endl;
+    return balls;
+}
+
+hitable_list* random_balls() {
+    hitable_list *balls = new hitable_list;
+    for (int i = 0; i < 1000; ++i) {
+        float radius = 0.2 + 0.05*drand48();
+        vec3 center(-5 + 10*drand48(), -5 + 10*drand48(), -5 + 10*drand48());
+        balls->add(new sphere(center, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
+    }
+    cout << "Random scene generated. Total ball number: " << balls->list.size() << endl;
+    return balls;
+}
+
+hitable_list* plane_balls() {
+    hitable_list *balls = new hitable_list;
+    for (int i = 0; i < 1000; ++i) {
+        float radius = 0.2 + 0.05*drand48();
+        vec3 center(-5 + 10*drand48(), radius, -5 + 10*drand48());
+        balls->add(new sphere(center, radius, new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))) ));
+    }
+    cout << "Plane-focused scene generated. Total ball number: " << balls->list.size() << endl;
     return balls;
 }
 
@@ -170,9 +204,9 @@ void draw(ofstream& ofs, bool show_time = true) {
     timer draw_timer;
     draw_timer.begin();
     // basic config
-    int PIX_WIDTH = 320;
-    int PIX_HEIGHT = 200;
-    int ANTIALIAS_N = 10;
+    int PIX_WIDTH = 288;
+    int PIX_HEIGHT = 180;
+    int ANTIALIAS_N = 5;
 
     PPMHeader(ofs, PIX_WIDTH, PIX_HEIGHT);
 
@@ -181,15 +215,17 @@ void draw(ofstream& ofs, bool show_time = true) {
     // set up stage
     hitable_list *world = new hitable_list;
 
-    hitable_list *scene = myballs(); // change scene here
-    bvh_node *bvh = new bvh_node(scene, 0, 1);
+    hitable_list *scene = plane_balls(); // change scene here
+    bvh_node *bvh = new bvh_node(scene, 0, 1, 0.2); cout << endl << "My "; // optimized bvh construction
+    // bvh_node *bvh = new bvh_node(scene, 0, 1); cout << endl << "Vanila "; // vanilla bvh
+    cout << "BVH depth: " << bvh->depth << endl;
     world->add(bvh);
 
     //world_bvh->print();
 
     // set up camera
-    vec3 lookfrom(13,2,3), lookat(0,0,0);
-    //vec3 lookfrom(14,9,4), lookat(5,7,0);
+    // vec3 lookfrom(13,2,3), lookat(0,0,0);
+    vec3 lookfrom(9,6,9), lookat(0,0,0);
     //vec3 lookfrom(278, 278, -800), lookat(278,278,0);
     float dist_to_focus = 10; // (lookfrom - lookat).length();
     float aperture = 0.0;
